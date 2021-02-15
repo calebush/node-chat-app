@@ -4,6 +4,19 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <p>Just started chart app!, Welcome</p>
+        <p>Just started chart app!, Welcome......</p>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+
+            socket.on('connect', ()=>{
+                console.log("connected to the server")
+            })
+
+            socket.on('disconnect', ()=>{
+                console.log("disconnected from server..")
+            })
+        </script>
     </body>
 </html>
