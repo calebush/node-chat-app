@@ -10,34 +10,22 @@ const port = process.env.PORT||5000
 var app= express();
 var server = http.createServer(app);
 var io =socketIO(server);
-
+const {generateMessage} = require('./utils/message')
 app.use(express.static(publicPath));
 
 //register an event listener...Listening o connection event
 io.on('connection', (socket)=>{
     console.log("New user connected")
 
-  socket.emit('newMessage', {
-      from:"Admin",
-      text:"Hey, welcome to our chat group",
-      createdAt:new Date().getTime(),
-  })
-
-  socket.broadcast.emit('newMessage',{
-      from:"Admin",
-      text:"New user Joined the chatroom",
-      createdAt:new Date().getTime(),
-  })
+  socket.emit('newMessage', generateMessage("Admin","Hey, welcome to our chat group"));
+ 
+  socket.broadcast.emit('newMessage', generateMessage("Admin","New user Joined the chatroom"));
 
 
-    socket.on('createMessage', (message)=>{
+    socket.on('createMessage', (message, callback)=>{
         console.log("Message received:", message);
-        io.emit('newMessage', {
-            from:message.from,
-            text:message.text,
-            createdAt: new Date().getTime()
-        })
-
+        io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from server')
         //BROADCAST
         //  text:message.text,
         //    socket.broadcast.emit('newMessage',{
